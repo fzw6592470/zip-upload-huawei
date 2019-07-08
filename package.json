@@ -1,0 +1,26 @@
+{
+  "name": "zip-upload-huawei",
+  "version": "1.0.0",
+  "description": "Automatically packaged into a zip archive and upload the Huawei wecode platform",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test/test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fzw6592470/zip-upload-huawei.git"
+  },
+  "keywords": [
+    "zip",
+    "upload",
+    "huawei",
+    "wecode",
+    "webpack"
+  ],
+  "author": "lele199007@sina.com",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/fzw6592470/zip-upload-huawei/issues"
+  },
+  "homepage": "https://github.com/fzw6592470/zip-upload-huawei#readme"
+}
