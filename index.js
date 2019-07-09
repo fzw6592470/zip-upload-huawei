@@ -49,7 +49,7 @@ class ZipUploadWebpackPlugin {
                 options.zip.addFile(filePath, options.name);
             }else{
                 options.zip.addEmptyDirectory(options.name);
-                fs.readdirSync(filePath).forEach( f => _fnAddFile(options.source, options.name+'/'+ f));
+                fs.readdirSync(filePath).forEach( f => _fnAddFile({source:options.source, name: options.name+'/'+ f,zip:options.zip}));
             }
 
             return options.zip
