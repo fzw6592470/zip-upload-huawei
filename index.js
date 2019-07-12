@@ -2,7 +2,9 @@ const fs = require('fs')
 const path = require('path')
 
 const yazl = require('yazl')
-const tinyJsonHttp = require('tiny-json-http')
+const _fetch = require('node-fetch')
+const { URLSearchParams } = require('url')
+const FormData = require('form-data')
 
 
 class ZipUploadWebpackPlugin {
@@ -61,41 +63,38 @@ class ZipUploadWebpackPlugin {
             }
 
             const _fnUploadHuawei = options => {
-                process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0;
-                const appid = options.appid;
-                if(!options.username || !options.password) {
+				process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0
+				const appid = options.appid;
+				if(!options.username || !options.password) {
                     throw new Error("请配置账号和密码！");
                     return;
                 }
-                return tinyJsonHttp.post({
-                    url: "https://cloudlinkworkplace-login.huaweicloud.com/sso/v1/oidc/token",
-                    headers: {
-                        'Accept': 'application/json',
-                        'rejectUnauthorized': 'false',
-                        'User-Agent':'node-fetch/1.0 (+https://github.com/bitinn/node-fetch)',
-                        'Content-Type':'application/x-www-form-urlencoded'
-                    },
-                    data: {
-                        username: options.username,
-                        password: options.password
-                    }
-                }).then(resp=>{
-                    const token = `Bearer ${resp.body.access_token}`
-                    const data = {}
-                    data[appid] = fs.createReadStream(options.zipname)
-                    return tinyJsonHttp.post({
-                        url: "https://cloudlinkworkplace-api.huaweicloud.com/wedebugcloud/rest/ide/uploadDevelopFile",
-                        headers: {
-                            'Accept': 'application/json',
-                            'Authorization': token,
-                            'rejectUnauthorized': 'false',
-                            'User-Agent':'node-fetch/1.0 (+https://github.com/bitinn/node-fetch)',
-                            'Content-Type':'multipart/form-data'
-                        },
-                        data:data
-                    }).then(resp=>resp.body)
-                })
-            }
+				const params = new URLSearchParams()
+				params.append('username', options.username)
+				params.append('password', options.password)
+				return _fetch('https://cloudlinkworkplace-login.huaweicloud.com/sso/v1/oidc/token', {
+					method: 'POST',
+					body: params,
+					headers: {
+						'rejectUnauthorized': 'false'
+					}
+				}).then(res => res.json())
+				.then(json => {
+					console.log(json)
+					const token = `Bearer ${json.access_token}`
+					const stream = fs.createReadStream(options.zipname)
+					const form = new FormData()
+					form.append(appid, stream)
+					return _fetch('https://cloudlinkworkplace-api.huaweicloud.com/wedebugcloud/rest/ide/uploadDevelopFile', {
+						method: 'POST',
+						body: form,
+						headers: {
+							'Authorization': token,
+							'rejectUnauthorized': 'false',
+						}
+					}).then(res => res.json())
+				})
+			}
 
             fs.readdirSync(outputPath).forEach( f => {
                 const options = {

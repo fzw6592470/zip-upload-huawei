@@ -1,6 +1,6 @@
 {
   "name": "zip-upload-huawei",
-  "version": "1.0.3",
+  "version": "2.0.0",
   "description": "Automatically packaged into a zip archive and upload the Huawei wecode platform",
   "main": "index.js",
   "scripts": {
@@ -28,6 +28,7 @@
     "yazl": "^2.5.1"
   },
   "devDependencies": {
+    "node-fetch": "^2.6.0",
     "webpack": "^4.35.2"
   }
 }
