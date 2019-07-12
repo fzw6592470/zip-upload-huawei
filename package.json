@@ -1,6 +1,6 @@
 {
   "name": "zip-upload-huawei",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Automatically packaged into a zip archive and upload the Huawei wecode platform",
   "main": "index.js",
   "scripts": {

@@ -76,7 +76,8 @@ class ZipUploadWebpackPlugin {
 					method: 'POST',
 					body: params,
 					headers: {
-						'rejectUnauthorized': 'false'
+						'rejectUnauthorized': 'false',
+						'Content-Type': "application/x-www-form-urlencoded;charset=UTF-8"
 					}
 				}).then(res => res.json())
 				.then(json => {
