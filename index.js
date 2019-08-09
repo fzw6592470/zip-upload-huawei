@@ -19,7 +19,9 @@ class ZipUploadWebpackPlugin {
             inject: true,
             compile: true,
             showErrors: true,
-            excludeFile: []
+            excludeFile: [],
+            getTokenUrl: "https://cloudlinkworkplace-login.huaweicloud.com/sso/v1/oidc/token",
+            uploadUrl: "https://cloudlinkworkplace-api.huaweicloud.com/wedebugcloud/rest/ide/uploadDevelopFile"
         }
 
         this.options = Object.assign(defaultOptions, userOptions)
@@ -72,7 +74,7 @@ class ZipUploadWebpackPlugin {
 				const params = new URLSearchParams()
 				params.append('username', options.username)
 				params.append('password', options.password)
-				return _fetch('https://cloudlinkworkplace-login.huaweicloud.com/sso/v1/oidc/token', {
+				return _fetch(options.getTokenUrl, {
 					method: 'POST',
 					body: params,
 					headers: {
@@ -86,7 +88,7 @@ class ZipUploadWebpackPlugin {
 					const stream = fs.createReadStream(options.zipname)
 					const form = new FormData()
 					form.append(appid, stream)
-					return _fetch('https://cloudlinkworkplace-api.huaweicloud.com/wedebugcloud/rest/ide/uploadDevelopFile', {
+					return _fetch(options.uploadUrl, {
 						method: 'POST',
 						body: form,
 						headers: {
